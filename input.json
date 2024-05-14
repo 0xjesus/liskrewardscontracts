@@ -1,0 +1,20 @@
+{
+    "language": "Solidity",
+    "sources": {
+      "FitCoinAi.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.20;\n\nimport {ERC20} from \"@openzeppelin/contracts/token/ERC20/ERC20.sol\";\n\ncontract FitCoinAI is ERC20 {\n    struct Reward {\n        string id;  // Change from uint256 to string\n        uint256 amount;\n    }\n\n    // Mapping to store rewards per user\n    mapping(address => Reward[]) private userRewards;\n\n    // Event to be emitted when a reward is registered\n    event RewardRegistered(address indexed user, string id, uint256 amount);\n\n    constructor() ERC20(\"FitCoinAI\", \"FCAI\") {\n        // Initial minting can be done here if needed, e.g., mint initial supply to the deployer\n        // _mint(msg.sender, initialSupply);\n    }\n\n    // Additional functions for minting and burning tokens can be added here\n    // Note: Be cautious with who has access to minting and burning functions\n    function mint(address account, uint256 amount) external {\n        _mint(account, amount);\n    }\n\n    function burn(address account, uint256 amount) external {\n        _burn(account, amount);\n    }\n\n    // Function to register a reward for a user\n    function registerReward(address user, string memory id, uint256 amount) external {\n        // Register the reward for the user\n        userRewards[user].push(Reward(id, amount));\n        \n        // Emit the RewardRegistered event\n        emit RewardRegistered(user, id, amount);\n\n        // Optionally, you could mint the reward amount to the user\n        _mint(user, amount);\n    }\n\n    // Function to retrieve rewards for a user\n    function getUserRewards(address user) external view returns (Reward[] memory) {\n        return userRewards[user];\n    }\n}\n"
+      }
+    },
+    "settings": {
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "*": ["abi", "evm.bytecode.object"]
+        }
+      }
+    }
+  }
+  
